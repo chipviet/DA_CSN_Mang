@@ -1,4 +1,4 @@
-package com.example.demo.controller;
+package com.doan.cnpm.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
