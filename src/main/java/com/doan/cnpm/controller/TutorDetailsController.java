@@ -4,6 +4,8 @@ package com.doan.cnpm.controller;
 
 import com.doan.cnpm.domain.TutorDetails;
 import com.doan.cnpm.repositories.TutorDetailsRepository;
+import com.doan.cnpm.service.exception.TutorNotFoundException;
+import com.doan.cnpm.service.response.TutorDetailsResp;
 import org.apache.tomcat.util.http.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,4 +39,14 @@ public class TutorDetailsController {
         return tutorDetailsRepository.findAll();
     }
 
-}
+    @GetMapping("/tutor/details")
+    public TutorDetails getTutorDetails (HttpServletRequest request) throws TutorNotFoundException {
+
+        String efficency = "indigo";
+
+        TutorDetails data = tutorDetailsRepository.findOneById(efficency);
+
+        return data;
+    }
+
+}   

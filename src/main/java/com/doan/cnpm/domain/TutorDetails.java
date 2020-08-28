@@ -20,5 +20,31 @@ public class TutorDetails {
     @Column(name = "efficency")
     private Long efficency;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getLiteracy() {
+        return literacy;
+    }
+
+    public void setLiteracy(String literacy) {
+        this.literacy = literacy;
+    }
+
+    public Long getEfficency() {
+        return efficency;
+    }
+
+    public void setEfficency(Long efficency) {
+        this.efficency = efficency;
+    }
+
+
+
 
 }
