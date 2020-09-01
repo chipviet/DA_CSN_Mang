@@ -26,7 +26,7 @@ public class JWTFilter extends GenericFilterBean {
 
     private static final Logger log = LoggerFactory.getLogger(JWTFilter.class);
 
-    private static final String E_WALLET_URI = "/api/edu/";
+    private static final String EDU_URI = "/api/edu/";
     public static final String AUTHORIZATION_HEADER = "Authorization";
 
     private final TokenProvider tokenProvider;
@@ -47,18 +47,16 @@ public class JWTFilter extends GenericFilterBean {
         if (StringUtils.hasText(jwt) && this.tokenProvider.validateToken(jwt)) {
             Authentication authentication = this.tokenProvider.getAuthentication(jwt);
             SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            if (uri.startsWith(E_WALLET_URI)) {
+            if (uri.startsWith(EDU_URI)) {
                 MutableHttpServletRequest req = new MutableHttpServletRequest(httpServletRequest);
                 User user = (User) authentication.getPrincipal();
+                String username = user.getUsername();
                 req.putHeader("username", user.getUsername());
                 filterChain.doFilter(req, servletResponse);
                 return;
             }
         } else {
-            log.info("Validate");
-            if (uri.startsWith(E_WALLET_URI) && !uri.endsWith("/getToken")) {
-                log.info("toi day");
+            if (uri.startsWith(EDU_URI) && !uri.endsWith("/getToken")) {
                 HttpServletResponse response = (HttpServletResponse) servletResponse;
                 if (!StringUtils.hasText(jwt)) {
                     log.info("Missing token in the request header");
@@ -71,8 +69,6 @@ public class JWTFilter extends GenericFilterBean {
                 return;
             }
         }
-
-        log.info("Go ahead");
 
         filterChain.doFilter(servletRequest, servletResponse);
     }

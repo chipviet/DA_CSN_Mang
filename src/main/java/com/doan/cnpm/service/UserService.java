@@ -4,7 +4,10 @@ import com.doan.cnpm.domain.User;
 import com.doan.cnpm.domain.enumeration.UserStatus;
 import com.doan.cnpm.repositories.UserRepository;
 import com.doan.cnpm.service.dto.RegisterUserDTO;
+import com.doan.cnpm.service.exception.UserIsInactiveException;
+import com.doan.cnpm.service.exception.UserNotFoundException;
 import com.doan.cnpm.service.exception.UsernameAlreadyUsedException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -51,6 +54,13 @@ public class UserService {
         userRepository.save(newUser);
         System.out.println("Created information for ewallet User");
         return  newUser;
+    }
+
+    public User getUserDetails(String username) throws UserNotFoundException, UserIsInactiveException {
+
+        User user = userRepository.findOneByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found with username:" + username));
+
+        return user;
     }
 }
 

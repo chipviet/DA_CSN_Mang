@@ -7,6 +7,8 @@ import com.doan.cnpm.security.jwt.TokenProvider;
 import com.doan.cnpm.service.UserService;
 import com.doan.cnpm.service.dto.LoginDTO;
 import com.doan.cnpm.service.dto.RegisterUserDTO;
+import com.doan.cnpm.service.exception.UserIsInactiveException;
+import com.doan.cnpm.service.exception.UserNotFoundException;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,35 +21,20 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import javax.validation.constraints.Size;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/edu")
 public class UserController {
 
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
-    private final TokenProvider tokenProvider;
-
     private UserService userService;
 
-    private UserRepository userRepository;
-
-    private PasswordEncoder passwordEncoder;
-
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
-
-    public UserController(TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder) {
-        this.tokenProvider = tokenProvider;
-        this.authenticationManagerBuilder = authenticationManagerBuilder;
+    public UserController() {
     }
 
     @Autowired
@@ -55,41 +42,13 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/v1/user/login")
-    public ResponseEntity<JWTToken> login (@Valid @RequestBody LoginDTO dto){
+    @GetMapping("/v1/user/details")
+    public  ResponseEntity<User> getUserDetails(HttpServletRequest request)
+            throws UserNotFoundException, UserIsInactiveException {
+        String username = request.getHeader("username");
+        User userDetailsResp = userService.getUserDetails(username);
 
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(dto.getUsername(),dto.getPassword());
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate((authenticationToken));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = tokenProvider.createToken(authentication,false);
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, "Bearer" + jwt);
-        return new ResponseEntity<>(new JWTToken(jwt),httpHeaders, HttpStatus.OK);
-    }
-
-    @PostMapping("/v1/user/register")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void registerUser(@RequestBody RegisterUserDTO dto) {
-        userService.registerUser(dto);
-    }
-
-
-    class JWTToken {
-
-        private String authToken;
-
-        public JWTToken(String authToken) {
-            this.authToken = authToken;
-        }
-
-        @JsonProperty("authToken")
-        String getAuthToken() {
-            return authToken;
-        }
-
-        void setAuthToken(String authToken) {
-            this.authToken = authToken;
-        }
+        return new ResponseEntity<>(userDetailsResp, HttpStatus.OK);
     }
 
 }

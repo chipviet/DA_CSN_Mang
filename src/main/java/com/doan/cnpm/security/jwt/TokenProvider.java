@@ -27,14 +27,14 @@ public class TokenProvider {
     private static final String AUTHORITIES_KEY = "auth";
 
 
-    private long tokenValidityInMilliseconds;
+    private long tokenValidityInMilliseconds = 604800000L;
 
-    private long tokenValidityInMillisecondsForRememberMe;
-
+    private long tokenValidityInMillisecondsForRememberMe =604800000L;
 
 
     public TokenProvider( ) {
     }
+
 
     public String createToken(Authentication authentication, boolean rememberMe) {
         String authorities = authentication.getAuthorities().stream()
