@@ -26,11 +26,11 @@ public class UserService {
     public User registerUser(RegisterUserDTO dto) {
 
         System.out.println("registerUser");
-        User existingUser = userRepository.findOneByUsername(dto.getUsername().toLowerCase());
+        Optional<User> existingUser = userRepository.findOneByUsername(dto.getUsername().toLowerCase());
 
-        if(existingUser.getUsername() == dto.getUsername()) {
-            throw new UsernameAlreadyUsedException();
-        }
+       if(existingUser.isPresent()) {
+           throw new UsernameAlreadyUsedException();
+       }
 
         User newUser = new User();
         newUser.setUsername(dto.getUsername().toLowerCase());

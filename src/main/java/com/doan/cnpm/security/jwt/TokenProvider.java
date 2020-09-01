@@ -1,7 +1,6 @@
 package com.doan.cnpm.security.jwt;
 
 import java.nio.charset.StandardCharsets;
-import java.security.Key;
 import java.util.*;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
@@ -27,7 +26,6 @@ public class TokenProvider {
 
     private static final String AUTHORITIES_KEY = "auth";
 
-    private Key key;
 
     private long tokenValidityInMilliseconds;
 
@@ -54,14 +52,14 @@ public class TokenProvider {
         return Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim(AUTHORITIES_KEY, authorities)
-                .signWith(SignatureAlgorithm.HS512, key)
+                .signWith(SignatureAlgorithm.HS512, "ChipvietHandsome")
                 .setExpiration(validity)
                 .compact();
     }
 
     public Authentication getAuthentication(String token) {
         Claims claims = Jwts.parser()
-                .setSigningKey(key)
+                .setSigningKey("ChipvietHandsome")
                 .parseClaimsJws(token)
                 .getBody();
 
@@ -77,7 +75,7 @@ public class TokenProvider {
 
     public boolean validateToken(String authToken) {
         try {
-            Jwts.parser().setSigningKey(key).parseClaimsJws(authToken);
+            Jwts.parser().setSigningKey("ChipvietHandsome").parseClaimsJws(authToken);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
             log.info("Invalid JWT token.");

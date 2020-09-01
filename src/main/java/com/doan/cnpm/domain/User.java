@@ -1,15 +1,21 @@
 package com.doan.cnpm.domain;
 
 import com.doan.cnpm.domain.enumeration.UserStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "user")
+
 public class User  implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -56,6 +62,16 @@ public class User  implements Serializable {
 
     @Column(name = "creation_date")
     private LocalDate creationDate;
+
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+            name = "jhi_user_authority",
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "name")})
+
+    @BatchSize(size = 20)
+    private Set<Authority> authorities = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -168,4 +184,13 @@ public class User  implements Serializable {
     public void setCreationDate(LocalDate creationDate) {
         this.creationDate = creationDate;
     }
+
+    public Set<Authority> getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(Set<Authority> authorities) {
+        this.authorities = authorities;
+    }
+
 }

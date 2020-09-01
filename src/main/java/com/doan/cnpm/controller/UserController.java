@@ -55,8 +55,9 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/getToken")
-    public ResponseEntity<JWTToken> getToken (@Valid @RequestBody LoginDTO dto){
+    @PostMapping("/v1/user/login")
+    public ResponseEntity<JWTToken> login (@Valid @RequestBody LoginDTO dto){
+
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(dto.getUsername(),dto.getPassword());
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate((authenticationToken));
         SecurityContextHolder.getContext().setAuthentication(authentication);
