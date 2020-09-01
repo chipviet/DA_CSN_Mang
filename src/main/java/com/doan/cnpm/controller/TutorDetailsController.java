@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/edu")
 @Transactional
 public class TutorDetailsController {
 
@@ -34,12 +34,13 @@ public class TutorDetailsController {
         this.tutorDetailsRepository = tutorDetailsRepository;
     };
 
-    @GetMapping("/tutor")
+    @GetMapping("v1/tutor")
     public List<TutorDetails> getAllTutorDetails() {
+        System.out.println("Vaooodaayy");
         return tutorDetailsRepository.findAll();
     }
 
-    @GetMapping("/tutor/details")
+    @GetMapping("v1/tutor/details")
     public TutorDetails getTutorDetails (HttpServletRequest request) throws TutorNotFoundException {
 
         String efficency = "indigo";
@@ -49,4 +50,4 @@ public class TutorDetailsController {
         return data;
     }
 
-}   
+}
