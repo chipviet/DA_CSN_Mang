@@ -4,7 +4,7 @@ public class TutorDetailsResp {
 
     private String literacy;
 
-    private Double efficency;
+    private Long efficency;
 
     public String getLiteracy() {
         return literacy;
@@ -14,11 +14,11 @@ public class TutorDetailsResp {
         this.literacy = literacy;
     }
 
-    public Double getEfficency() {
+    public Long getEfficency() {
         return efficency;
     }
 
-    public void setEfficency(Double efficency) {
+    public void setEfficency(Long efficency) {
         this.efficency = efficency;
     }
 }
