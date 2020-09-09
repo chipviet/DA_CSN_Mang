@@ -45,6 +45,8 @@ public class UserService {
         newUser.setGender(dto.getGender());
         newUser.setPhoto(dto.getPhoto());
         newUser.setAddress(dto.getAddress());
+        newUser.setLatitude(dto.getLatitude());
+        newUser.setLongitude(dto.getLongitude());
         newUser.setIntroduction(dto.getIntroduction());
         newUser.setPhoneNumber(dto.getPhoneNumber());
         newUser.setDateOfBirth(dto.getDateOfBirth());
