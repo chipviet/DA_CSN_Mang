@@ -54,4 +54,13 @@ public class TutorDetailsService {
     public void DeleteTutorDetails(String username){
         tutorDetailsRepository.deleteByUsername(username);
     }
+
+    public TutorDetails GetTutorDetails(String username)throws TutorNotFoundException{
+        TutorDetails tutor = tutorDetailsRepository.findOneByUsername(username);
+        if(tutor ==null)
+        {
+            throw new TutorNotFoundException("Tutor not found: "+username);
+        }
+        return  tutor;
+    }
 }

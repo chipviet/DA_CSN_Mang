@@ -49,19 +49,18 @@ public class TutorDetailsController {
 
     @GetMapping("v1/tutor")
     public List<TutorDetails> getAllTutorDetails() {
-        System.out.println("Vaooodaayy");
         return tutorDetailsRepository.findAll();
     }
 
 
     @GetMapping("v1/tutor/details")
-    public TutorDetails getTutorDetails (HttpServletRequest request) throws TutorNotFoundException {
+    public ResponseEntity<TutorDetails> getTutorDetails (HttpServletRequest request) throws TutorNotFoundException {
 
         String username = request.getHeader("username");
 
-        TutorDetails data = tutorDetailsRepository.findOneById(username);
+        TutorDetails data = tutorDetailsRepository.findOneByUsername(username);
 
-        return data;
+        return new ResponseEntity<>(data,HttpStatus.OK);
     }
     
     @PostMapping("v1/tutor/create")
