@@ -36,7 +36,6 @@ public class TutorDetailsController {
 
     @GetMapping("v1/tutor")
     public List<TutorDetails> getAllTutorDetails() {
-        System.out.println("Vaooodaayy");
         return tutorDetailsRepository.findAll();
     }
 
