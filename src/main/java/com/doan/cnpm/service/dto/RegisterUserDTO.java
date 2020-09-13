@@ -64,6 +64,9 @@ public class RegisterUserDTO implements Serializable {
     @NotBlank
     private LocalDate dateOfBirth;
 
+    @NotNull
+    @NotBlank
+    private String authority;
 
     public String getUsername() {
         return username;
@@ -167,5 +170,13 @@ public class RegisterUserDTO implements Serializable {
 
     public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getAuthority() {
+        return authority;
+    }
+
+    public void setAuthority(String authority) {
+        this.authority = authority;
     }
 }
