@@ -23,6 +23,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.jws.soap.SOAPBinding;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -53,15 +54,20 @@ public class AuthController {
     }
 
     @PostMapping("/v1/user/login")
-    public ResponseEntity<JWTToken> login (@Valid @RequestBody LoginDTO dto){
+    public ResponseEntity<JWTToken> login (@Valid @RequestBody LoginDTO dto) throws UserNotFoundException, UserOrPasswordIsNotCorrectlyException {
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(dto.getUsername(),dto.getPassword());
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate((authenticationToken));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = tokenProvider.createToken(authentication,false);
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, "Bearer" + jwt);
-        return new ResponseEntity<>(new JWTToken(jwt),httpHeaders, HttpStatus.OK);
+        try{
+            Authentication authentication = authenticationManagerBuilder.getObject().authenticate((authenticationToken));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String jwt = tokenProvider.createToken(authentication,false);
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, "Bearer" + jwt);
+            return new ResponseEntity<>(new JWTToken(jwt),httpHeaders, HttpStatus.OK);
+        }
+        catch ( Exception e) {
+            throw new UserNotFoundException();
+        }
     }
 
     @PostMapping("/v1/user/register")
