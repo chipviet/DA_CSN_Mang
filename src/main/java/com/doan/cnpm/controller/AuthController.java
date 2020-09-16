@@ -4,9 +4,11 @@ import com.doan.cnpm.domain.User;
 import com.doan.cnpm.repositories.UserRepository;
 import com.doan.cnpm.security.jwt.JWTFilter;
 import com.doan.cnpm.security.jwt.TokenProvider;
+import com.doan.cnpm.service.UserAuthorityService;
 import com.doan.cnpm.service.UserService;
 import com.doan.cnpm.service.dto.LoginDTO;
 import com.doan.cnpm.service.dto.RegisterUserDTO;
+import com.doan.cnpm.service.exception.AccessDeniedException;
 import com.doan.cnpm.service.exception.UserIsInactiveException;
 import com.doan.cnpm.service.exception.UserNotFoundException;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.jws.soap.SOAPBinding;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -41,11 +44,15 @@ public class AuthController {
 
     private PasswordEncoder passwordEncoder;
 
+    private UserAuthorityService userAuthorityService;
+
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
-    public AuthController(TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder) {
+    public AuthController(TokenProvider tokenProvider,UserRepository userRepository, AuthenticationManagerBuilder authenticationManagerBuilder, UserAuthorityService userAuthorityService) {
         this.tokenProvider = tokenProvider;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
+        this.userAuthorityService = userAuthorityService;
+        this.userRepository = userRepository;
     }
 
     @Autowired
@@ -54,10 +61,9 @@ public class AuthController {
     }
 
     @PostMapping("/v1/user/login")
-    public ResponseEntity<JWTToken> login (@Valid @RequestBody LoginDTO dto) throws UserNotFoundException, UserOrPasswordIsNotCorrectlyException {
-
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(dto.getUsername(),dto.getPassword());
+    public ResponseEntity<JWTToken> login (@Valid @RequestBody LoginDTO dto) {
         try{
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(dto.getUsername(),dto.getPassword());
             Authentication authentication = authenticationManagerBuilder.getObject().authenticate((authenticationToken));
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String jwt = tokenProvider.createToken(authentication,false);
@@ -66,6 +72,30 @@ public class AuthController {
             return new ResponseEntity<>(new JWTToken(jwt),httpHeaders, HttpStatus.OK);
         }
         catch ( Exception e) {
+            throw new UserNotFoundException();
+        }
+    }
+
+    @PostMapping("/v1/admin/login")
+    public ResponseEntity<JWTToken> adminLogin (@Valid @RequestBody LoginDTO dto) {
+        try{
+            Optional<User> user = userRepository.findOneByUsername(dto.getUsername());
+            String userId = String.valueOf(user.get().getId());
+            String authority = userAuthorityService.getAuthority(userId);
+            if(authority.equals("ROLE_ADMIN")) {
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(dto.getUsername(),dto.getPassword());
+                Authentication authentication = authenticationManagerBuilder.getObject().authenticate((authenticationToken));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+                String jwt = tokenProvider.createToken(authentication,false);
+                HttpHeaders httpHeaders = new HttpHeaders();
+                httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, "Bearer" + jwt);
+                return new ResponseEntity<>(new JWTToken(jwt),httpHeaders, HttpStatus.OK);
+            }
+            else {
+                throw new AccessDeniedException();
+            }
+        }
+        catch ( UserNotFoundException e) {
             throw new UserNotFoundException();
         }
     }

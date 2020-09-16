@@ -59,7 +59,7 @@ public class TutorDetailsService {
         TutorDetails tutor = tutorDetailsRepository.findOneByUsername(username);
         if(tutor ==null)
         {
-            throw new TutorNotFoundException("Tutor not found: "+username);
+            throw new TutorNotFoundException();
         }
         return  tutor;
     }

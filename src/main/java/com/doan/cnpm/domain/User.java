@@ -48,10 +48,10 @@ public class User  implements Serializable {
     @Column(name = "address")
     private String address;
 
-    @Column(name = "lat")
+    @Column(name = "latitude")
     private Double latitude;
 
-    @Column(name = "long")
+    @Column(name = "longitude")
     private Double longitude;
 
     @Column(name = "introduction")
@@ -72,7 +72,7 @@ public class User  implements Serializable {
     @JsonIgnore
     @ManyToMany
     @JoinTable(
-            name = "jhi_user_authority",
+            name = "user_authority",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "name")})
 

@@ -37,7 +37,6 @@ public class DomainUserDetailsService implements UserDetailsService {
         return userRepository.findOneByUsername(lowercaseLogin)
                 .map(user -> createSpringSecurityUser(lowercaseLogin, user))
                 .orElseThrow(() -> new UsernameNotFoundException("User " + lowercaseLogin + " was not found in the database"));
-
     }
 
     private org.springframework.security.core.userdetails.User createSpringSecurityUser(String lowercaseLogin, User user) {

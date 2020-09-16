@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -75,6 +76,12 @@ public class UserService {
         User user = userRepository.findOneByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found with username:" + username));
 
         return user;
+    }
+
+    public List<User> getAllUser() throws UserNotFoundException, UserIsInactiveException {
+
+        List<User> listUser = userRepository.findAll();
+        return listUser;
     }
 }
 
