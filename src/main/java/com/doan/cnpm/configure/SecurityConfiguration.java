@@ -1,6 +1,7 @@
 package com.doan.cnpm.configure;
 
 import com.doan.cnpm.security.AuthoritiesConstants;
+import com.doan.cnpm.security.CORSFilter;
 import com.doan.cnpm.security.jwt.CustomGenericFilter;
 import com.doan.cnpm.security.jwt.JWTConfigurer;
 import com.doan.cnpm.security.jwt.TokenProvider;
@@ -17,7 +18,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
-import org.springframework.web.filter.CorsFilter;
 import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
 
 @EnableWebSecurity
@@ -27,11 +27,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final TokenProvider tokenProvider;
 
-    private final CorsFilter corsFilter;
+    private final CORSFilter corsFilter;
     private final SecurityProblemSupport problemSupport;
    private final CustomGenericFilter customGenericFilter;
 
-    public SecurityConfiguration(TokenProvider tokenProvider, CorsFilter corsFilter, CustomGenericFilter customGenericFilter, SecurityProblemSupport problemSupport) {
+    public SecurityConfiguration(TokenProvider tokenProvider, CORSFilter corsFilter, CustomGenericFilter customGenericFilter, SecurityProblemSupport problemSupport) {
         this.tokenProvider = tokenProvider;
         this.corsFilter = corsFilter;
         this.customGenericFilter = customGenericFilter;
@@ -58,8 +58,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         // @formatter:off
         http
-               .csrf()
-               .disable()
+
+                .cors().and()
+                .csrf()
+                .disable()
                 .addFilterBefore(customGenericFilter, UsernamePasswordAuthenticationFilter.class)
                .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
                .exceptionHandling()
