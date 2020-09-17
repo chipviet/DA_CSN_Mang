@@ -12,6 +12,7 @@ import com.doan.cnpm.service.exception.AccessDeniedException;
 import com.doan.cnpm.service.exception.UserIsInactiveException;
 import com.doan.cnpm.service.exception.UserNotFoundException;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +62,20 @@ public class UserController {
         User userDetailsResp = userService.getUserDetails(username);
 
         return new ResponseEntity<>(userDetailsResp, HttpStatus.OK);
+    }
+
+    @GetMapping("/v1/user/details/{id}")
+    public ResponseEntity<User> getUserDetailsById(@PathVariable Long id, HttpServletRequest request) {
+        log.debug("REST request to get TutorDetails : {}", id);
+        String username = request.getHeader("username");
+        Optional<User> user = userRepository.findOneByUsername(username);
+        String userId = String.valueOf(user.get().getId());
+        String authority = userAuthorityService.getAuthority(userId);
+        if(authority.equals("ROLE_ADMIN")) {
+            Optional<User> tutorDetails = userRepository.findById(id);
+            return ResponseUtil.wrapOrNotFound(tutorDetails);
+        }
+        throw new AccessDeniedException();
     }
 
     @GetMapping("/v1/user")
