@@ -46,6 +46,14 @@ public class RegisterUserDTO implements Serializable {
 
     @NotNull
     @NotBlank
+    private Double latitude;
+
+    @NotNull
+    @NotBlank
+    private Double longitude;
+
+    @NotNull
+    @NotBlank
     private String introduction;
 
     @NotNull
@@ -56,6 +64,9 @@ public class RegisterUserDTO implements Serializable {
     @NotBlank
     private LocalDate dateOfBirth;
 
+    @NotNull
+    @NotBlank
+    private String authority;
 
     public String getUsername() {
         return username;
@@ -105,6 +116,22 @@ public class RegisterUserDTO implements Serializable {
         this.address = address;
     }
 
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
     public Boolean getGender() {
         return gender;
     }
@@ -143,5 +170,13 @@ public class RegisterUserDTO implements Serializable {
 
     public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getAuthority() {
+        return authority;
+    }
+
+    public void setAuthority(String authority) {
+        this.authority = authority;
     }
 }

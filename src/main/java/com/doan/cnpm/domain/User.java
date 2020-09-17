@@ -48,6 +48,12 @@ public class User  implements Serializable {
     @Column(name = "address")
     private String address;
 
+    @Column(name = "latitude")
+    private Double latitude;
+
+    @Column(name = "longitude")
+    private Double longitude;
+
     @Column(name = "introduction")
     private String introduction;
 
@@ -66,7 +72,7 @@ public class User  implements Serializable {
     @JsonIgnore
     @ManyToMany
     @JoinTable(
-            name = "jhi_user_authority",
+            name = "user_authority",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "name")})
 
@@ -143,6 +149,22 @@ public class User  implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 
     public String getIntroduction() {

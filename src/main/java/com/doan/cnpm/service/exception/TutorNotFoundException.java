@@ -1,8 +1,10 @@
 package com.doan.cnpm.service.exception;
 
-public class TutorNotFoundException extends  Exception {
+public class TutorNotFoundException  extends  RuntimeException{
 
-    public TutorNotFoundException(String message) {
-        super(message);
+    private static final long serialVersionUID = 1L;
+
+    public TutorNotFoundException() {
+        super("Tutor not found");
     }
 }

@@ -4,9 +4,11 @@ import com.doan.cnpm.domain.User;
 import com.doan.cnpm.repositories.UserRepository;
 import com.doan.cnpm.security.jwt.JWTFilter;
 import com.doan.cnpm.security.jwt.TokenProvider;
+import com.doan.cnpm.service.UserAuthorityService;
 import com.doan.cnpm.service.UserService;
 import com.doan.cnpm.service.dto.LoginDTO;
 import com.doan.cnpm.service.dto.RegisterUserDTO;
+import com.doan.cnpm.service.exception.AccessDeniedException;
 import com.doan.cnpm.service.exception.UserIsInactiveException;
 import com.doan.cnpm.service.exception.UserNotFoundException;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -25,6 +27,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/edu")
@@ -34,7 +38,14 @@ public class UserController {
 
     private UserService userService;
 
-    public UserController() {
+    private UserAuthorityService userAuthorityService;
+
+    private UserRepository userRepository;
+
+
+    public UserController( UserAuthorityService userAuthorityService, UserRepository userRepository ) {
+        this.userAuthorityService = userAuthorityService;
+        this.userRepository = userRepository;
     }
 
     @Autowired
@@ -49,6 +60,19 @@ public class UserController {
         User userDetailsResp = userService.getUserDetails(username);
 
         return new ResponseEntity<>(userDetailsResp, HttpStatus.OK);
+    }
+
+    @GetMapping("/v1/user")
+    public  ResponseEntity<List<User>> getAllUser(HttpServletRequest request) throws UserNotFoundException, UserIsInactiveException {
+        String username = request.getHeader("username");
+        Optional<User> user = userRepository.findOneByUsername(username);
+        String userId = String.valueOf(user.get().getId());
+        String authority = userAuthorityService.getAuthority(userId);
+        if(authority.equals("ROLE_ADMIN")) {
+            List<User> resp = userService.getAllUser();
+            return new ResponseEntity<>(resp, HttpStatus.OK);
+        }
+        throw new AccessDeniedException();
     }
 
 }
