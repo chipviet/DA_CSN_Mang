@@ -30,6 +30,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin(origins = "http://haimai.ddns.net:9090", maxAge = 3600)
 @RestController
 @RequestMapping("/api/edu")
 public class UserController {
