@@ -32,6 +32,7 @@ public class TutorDetailsService {
         newTutor.setEfficency(tutor.getEfficency());
         newTutor.setLiteracy(tutor.getLiteracy());
         newTutor.setUsername(username);
+        newTutor.setIdSubject(tutor.getId_Subject());
 
         tutorDetailsRepository.save(newTutor);
 
@@ -45,7 +46,7 @@ public class TutorDetailsService {
         System.out.println(Tutor);
         Tutor.setEfficency(tutor.getEfficency());
         Tutor.setLiteracy(tutor.getLiteracy());
-
+        Tutor.setIdSubject(tutor.getId_Subject());
         tutorDetailsRepository.save(Tutor);
 
         return Tutor;

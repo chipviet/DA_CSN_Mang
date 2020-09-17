@@ -24,6 +24,11 @@ public class TutorDetails {
     @Column(name = "username")
     private String username;
 
+
+
+    @Column(name = "id_subject")
+    private Long idSubject;
+
     public Long getId() {
         return id;
     }
@@ -51,5 +56,9 @@ public class TutorDetails {
     public String getUsername(){return username;}
 
     public void setUsername(String username){this.username = username; }
+
+    public Long getIdSubject() { return idSubject;    }
+
+    public void setIdSubject(Long idSubject) { this.idSubject = idSubject;    }
 
 }

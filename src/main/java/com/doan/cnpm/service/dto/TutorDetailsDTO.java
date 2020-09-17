@@ -11,6 +11,9 @@ public class TutorDetailsDTO {
     @NotBlank
     private Long efficency;
 
+    @NotNull
+    @NotBlank
+    private Long id_Subject;
     @NotBlank
     private String username;
 
@@ -37,4 +40,12 @@ public class TutorDetailsDTO {
     public void setUsername(String username) {
         this.username = username;
     }
+    public Long getId_Subject() {
+        return id_Subject;
+    }
+
+    public void setId_Subject(Long id_Subject) {
+        this.id_Subject = id_Subject;
+    }
+
 }
