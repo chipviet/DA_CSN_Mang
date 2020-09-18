@@ -18,16 +18,6 @@ public class Subject {
     @Column(name = "name_subject")
     private String nameSubject;
 
-    @Column(name = "id_tutor")
-    private Long idTutor;
-
-    public Long getIdTutor() {
-        return idTutor;
-    }
-
-    public void setIdTutor(Long idTutor) {
-        this.idTutor = idTutor;
-    }
 
     public Long getId() {
         return id;

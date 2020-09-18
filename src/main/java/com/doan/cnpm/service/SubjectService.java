@@ -16,7 +16,6 @@ public class SubjectService {
     public Subject CreateSubject(SubjectDTO subject){
         Subject newSubject = new Subject();
         newSubject.setNameSubject(subject.getNameSubject());
-        newSubject.setIdTutor(subject.getIdTutor());
         subjectRepository.save(newSubject);
         return newSubject;
     }
@@ -25,7 +24,6 @@ public class SubjectService {
         Subject subject1 = subjectRepository.findOneById(id);
 
         subject1.setNameSubject(subject.getNameSubject());
-        subject1.setIdTutor(subject.getIdTutor());
         subjectRepository.save(subject1);
         return subject1;
     }

@@ -8,17 +8,6 @@ public class SubjectDTO {
     @NotBlank
     private String nameSubject;
 
-    public Long getIdTutor() {
-        return idTutor;
-    }
-
-    public void setIdTutor(Long idTutor) {
-        this.idTutor = idTutor;
-    }
-
-    @NotNull
-    @NotBlank
-    private Long idTutor;
 
     public String getNameSubject() {
         return nameSubject;
