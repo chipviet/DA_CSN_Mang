@@ -1,11 +1,11 @@
 package com.doan.cnpm.controller;
 
-import com.doan.cnpm.domain.Course;
+import com.doan.cnpm.domain.Need;
 import com.doan.cnpm.domain.User;
-import com.doan.cnpm.repositories.CourseRepository;
+import com.doan.cnpm.repositories.NeedRepository;
 import com.doan.cnpm.repositories.UserRepository;
-import com.doan.cnpm.service.CourseService;
-import com.doan.cnpm.service.dto.CourseDTO;
+import com.doan.cnpm.service.NeedService;
+import com.doan.cnpm.service.dto.NeedDTO;
 import com.doan.cnpm.service.exception.AccessDeniedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,84 +24,84 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping("/api/edu")
 @Transactional
-public class CourseController {
-    private final Logger log = LoggerFactory.getLogger(CourseController.class);
-    private final CourseRepository courseRepository;
-    private CourseService courseService;
+public class NeedController {
+    private final Logger log = LoggerFactory.getLogger(NeedController.class);
+    private final NeedRepository needRepository;
+    private NeedService needService;
     private final UserRepository userRepository;
 
     private final UserAuthorityService userAuthorityService;
 
-    public CourseController(CourseRepository courseRepository, CourseService courseService, UserRepository userRepository, UserAuthorityService userAuthorityService) {
-        this.courseRepository = courseRepository;
-        this.courseService = courseService;
+    public NeedController(NeedRepository needRepository, NeedService needService, UserRepository userRepository, UserAuthorityService userAuthorityService) {
+        this.needRepository = needRepository;
+        this.needService = needService;
         this.userRepository = userRepository;
         this.userAuthorityService = userAuthorityService;
     }
 
-    @GetMapping(value="/v1/course")
-    public List<Course> getALlCourses(HttpServletRequest request){
+    @GetMapping(value="/v1/need")
+    public List<Need> getALlNeeds(HttpServletRequest request){
         String username = request.getHeader("username");
         Optional<User> user = userRepository.findOneByUsername(username);
         String userId = String.valueOf(user.get().getId());
         String authority = userAuthorityService.getAuthority(userId);
         if(authority.equals("ROLE_ADMIN")) {
-            return courseRepository.findAll();
+            return needRepository.findAll();
         }
         throw new AccessDeniedException();
     }
 
-    @GetMapping("v1/course/details")
-    public ResponseEntity<Course> getCourseDetails (@RequestParam(name = "id") Long id, HttpServletRequest request) {
+    @GetMapping("v1/need/details")
+    public ResponseEntity<Need> getNeedDetails (@RequestParam(name = "id") Long id, HttpServletRequest request) {
 
         String username = request.getHeader("username");
         Optional<User> user = userRepository.findOneByUsername(username);
         String userId = String.valueOf(user.get().getId());
         String authority = userAuthorityService.getAuthority(userId);
         if(authority.equals("ROLE_ADMIN")) {
-            Course data = courseRepository.findOneById(id);
+            Need data = needRepository.findOneById(id);
             return new ResponseEntity<>(data, HttpStatus.OK);
         }
         throw new AccessDeniedException();
     }
 
-    @PostMapping("v1/course/create")
+    @PostMapping("v1/need/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createCourse (@RequestBody CourseDTO course, HttpServletRequest request){
+    public void createNeed (@RequestBody NeedDTO need, HttpServletRequest request){
         String username = request.getHeader("username");
         Optional<User> user = userRepository.findOneByUsername(username);
         String userId = String.valueOf(user.get().getId());
         String authority = userAuthorityService.getAuthority(userId);
         if(authority.equals("ROLE_ADMIN")) {
-            courseService.CreateCourse(course);
+            needService.CreateNeed(need);
             return;
         }
         throw new AccessDeniedException();
     }
 
-    @PutMapping("v1/course/update")
+    @PutMapping("v1/need/update")
     @ResponseStatus(HttpStatus.UPGRADE_REQUIRED)
-    public void updateCourse (@RequestBody CourseDTO course, HttpServletRequest request, @RequestParam(name = "id") Long id )  {
+    public void updateNeed (@RequestBody NeedDTO need, HttpServletRequest request, @RequestParam(name = "id") Long id )  {
         String username = request.getHeader("username");
         Optional<User> user = userRepository.findOneByUsername(username);
         String userId = String.valueOf(user.get().getId());
         String authority = userAuthorityService.getAuthority(userId);
         if(authority.equals("ROLE_ADMIN")) {
-            courseService.UpdateCourse(course, id);
+            needService.UpdateNeed(need, id);
             return;
         }
         throw new AccessDeniedException();
     }
 
-    @DeleteMapping("v1/course/delete/{id}")
-    public void deleteCourse(HttpServletRequest request,@RequestParam(name = "id") Long id)
+    @DeleteMapping("v1/need/delete/{id}")
+    public void deleteNeed(HttpServletRequest request,@RequestParam(name = "id") Long id)
     {
         String username = request.getHeader("username");
         Optional<User> user = userRepository.findOneByUsername(username);
         String userId = String.valueOf(user.get().getId());
         String authority = userAuthorityService.getAuthority(userId);
         if(authority.equals("ROLE_ADMIN")) {
-            courseService.DeleteCourse(id);
+            needService.DeleteNeed(id);
             return;
         }
         throw new AccessDeniedException();

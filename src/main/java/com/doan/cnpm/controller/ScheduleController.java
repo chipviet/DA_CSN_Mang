@@ -1,6 +1,5 @@
 package com.doan.cnpm.controller;
 
-import com.doan.cnpm.domain.Course;
 import com.doan.cnpm.domain.Schedule;
 import com.doan.cnpm.domain.User;
 import com.doan.cnpm.repositories.ScheduleRepository;
@@ -8,8 +7,6 @@ import com.doan.cnpm.repositories.UserRepository;
 import com.doan.cnpm.service.ScheduleService;
 import com.doan.cnpm.service.UserAuthorityService;
 import com.doan.cnpm.service.dto.ScheduleDTO;
-import com.doan.cnpm.repositories.UserAuthorityRepository;
-import com.doan.cnpm.service.dto.SubjectDTO;
 import com.doan.cnpm.service.exception.AccessDeniedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

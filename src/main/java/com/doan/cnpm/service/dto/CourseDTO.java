@@ -7,18 +7,6 @@ public class CourseDTO {
 
     private Long id;
 
-    private Long idStudent;
-
-    private Long idSubject;
-
-    private Long level;
-
-    private Long basicTuition;
-
-    private Long idTutor;
-
-    private Long idSchedule;
-
     public Long getId() {
         return id;
     }
@@ -27,36 +15,12 @@ public class CourseDTO {
         this.id = id;
     }
 
-    public Long getIdStudent() {
-        return idStudent;
+    public Long getIdNeed() {
+        return idNeed;
     }
 
-    public void setIdStudent(Long idStudent) {
-        this.idStudent = idStudent;
-    }
-
-    public Long getIdSubject() {
-        return idSubject;
-    }
-
-    public void setIdSubject(Long idSubject) {
-        this.idSubject = idSubject;
-    }
-
-    public Long getLevel() {
-        return level;
-    }
-
-    public void setLevel(Long level) {
-        this.level = level;
-    }
-
-    public Long getBasicTuition() {
-        return basicTuition;
-    }
-
-    public void setBasicTuition(Long basicTuition) {
-        this.basicTuition = basicTuition;
+    public void setIdNeed(Long idNeed) {
+        this.idNeed = idNeed;
     }
 
     public Long getIdTutor() {
@@ -67,12 +31,8 @@ public class CourseDTO {
         this.idTutor = idTutor;
     }
 
-    public Long getIdSchedule() {
-        return idSchedule;
-    }
+    private Long idNeed;
 
-    public void setIdSchedule(Long idSchedule) {
-        this.idSchedule = idSchedule;
-    }
+    private Long idTutor;
 
 }

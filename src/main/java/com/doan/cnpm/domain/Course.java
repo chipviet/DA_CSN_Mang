@@ -15,15 +15,6 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "id_student")
-    private Long idStudent;
-
-    @Column(name = "id_subject")
-    private Long idSubject;
-
-    @Column(name = "level")
-    private Long level;
-
     public Long getId() {
         return id;
     }
@@ -32,36 +23,12 @@ public class Course {
         this.id = id;
     }
 
-    public Long getIdStudent() {
-        return idStudent;
+    public Long getIdNeed() {
+        return idNeed;
     }
 
-    public void setIdStudent(Long idStudent) {
-        this.idStudent = idStudent;
-    }
-
-    public Long getIdSubject() {
-        return idSubject;
-    }
-
-    public void setIdSubject(Long idSubject) {
-        this.idSubject = idSubject;
-    }
-
-    public Long getLevel() {
-        return level;
-    }
-
-    public void setLevel(Long level) {
-        this.level = level;
-    }
-
-    public Long getBasicTuition() {
-        return basicTuition;
-    }
-
-    public void setBasicTuition(Long basicTuition) {
-        this.basicTuition = basicTuition;
+    public void setIdNeed(Long idNeed) {
+        this.idNeed = idNeed;
     }
 
     public Long getIdTutor() {
@@ -72,21 +39,10 @@ public class Course {
         this.idTutor = idTutor;
     }
 
-    public Long getIdSchedule() {
-        return idSchedule;
-    }
-
-    public void setIdSchedule(Long idSchedule) {
-        this.idSchedule = idSchedule;
-    }
-
-    @Column(name = "basic_tuition")
-    private Long basicTuition;
+    @Column(name = "id_need")
+    private Long idNeed;
 
     @Column(name = "id_tutor")
     private Long idTutor;
 
-    @Column(name = "id_schedule")
-    private Long idSchedule;
-
-    }
+}

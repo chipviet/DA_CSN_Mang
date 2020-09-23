@@ -12,17 +12,17 @@ import javax.transaction.Transactional;
 @Repository
 @Transactional
 public interface CourseRepository extends JpaRepository<Course, Long> {
-    @Query("SELECT c from Course c where c.id= :id")
+    @Query("SELECT n from Course n where n.id= :id ")
     Course findOneById (@Param("id") Long id);
 
-    @Query("SELECT c from Course c where c.idStudent = :idStudent")
-    Course findOneByidStudent (@Param("idStudent") Long idStudent);
+    @Query("SELECT n from Course n where n.idNeed = :idNeed ")
+    Course findOneByidNeed (@Param("idNeed") Long idNeed);
 
-    @Query("SELECT c from Course c where c.level = :level")
-    Course findOneBylevel (@Param("level") Long level);
+    @Query("SELECT n from Course n where n.idTutor = :idTutor ")
+    Course findOneByidTutor(@Param("idTutor") Long idTutor);
 
     @Transactional
     @Modifying
-    @Query("DELETE from Course c where c.id = :id")
+    @Query("DELETE from Course n where n.id = :id ")
     void deleteById(@Param("id") Long id);
 }
