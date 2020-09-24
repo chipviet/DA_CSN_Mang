@@ -4,8 +4,11 @@ package com.doan.cnpm.domain;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-@Data
+//@Data
 @Entity
 @Table(name ="tutor_details")
 public class TutorDetails {
@@ -24,10 +27,23 @@ public class TutorDetails {
     @Column(name = "username")
     private String username;
 
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinTable(
+            name = "tutor_subject",
+            joinColumns = {@JoinColumn(name = "id_tutor")},
+            inverseJoinColumns = {@JoinColumn(name = "id_subject")}
+    )
+    private Set<Subject> subject = new HashSet<>();
+
+    public Set<Subject> getSubject() {
+        return subject;
+    }
+
+    public void setSubject(Set<Subject> subject) {
+        this.subject = subject;
+    }
 
 
-    @Column(name = "id_subject")
-    private Long idSubject;
 
     public Long getId() {
         return id;
@@ -57,8 +73,24 @@ public class TutorDetails {
 
     public void setUsername(String username){this.username = username; }
 
-    public Long getIdSubject() { return idSubject;    }
+    public void addSubject(Subject subject1)
+    {
+        this.subject.add(subject1);
+        subject1.getTutorDetails().add(this);
+    }
 
-    public void setIdSubject(Long idSubject) { this.idSubject = idSubject;    }
+    public void removeSubject(Subject subject1)
+    {
+        this.getSubject().remove(subject1);
+        subject1.getTutorDetails().remove(this);
+    }
+
+    public void removeSubject()
+    {
+        for (Subject subject1 : new HashSet<>(subject)){
+            removeSubject(subject1);
+        }
+    }
+
 
 }

@@ -1,16 +1,22 @@
 package com.doan.cnpm.service;
 
+import com.doan.cnpm.domain.Subject;
 import com.doan.cnpm.domain.TutorDetails;
 import com.doan.cnpm.domain.User;
+import com.doan.cnpm.repositories.SubjectRepository;
 import com.doan.cnpm.repositories.TutorDetailsRepository;
 import com.doan.cnpm.repositories.UserRepository;
 import com.doan.cnpm.service.dto.TutorDetailsDTO;
+import com.doan.cnpm.service.exception.SubjectNotFoundException;
 import com.doan.cnpm.service.exception.TutorNotFoundException;
-import com.doan.cnpm.service.response.TutorDetailsResp;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class TutorDetailsService {
@@ -19,10 +25,19 @@ public class TutorDetailsService {
 
     private final UserRepository userRepository;
 
-    public TutorDetailsService(TutorDetailsRepository tutorDetailsRepository, UserRepository userRepository)
+    private final SubjectRepository subjectRepository ;
+
+//    public TutorDetailsService(TutorDetailsRepository tutorDetailsRepository, UserRepository userRepository, SubjectRepository subjectRepository) {
+//        this.tutorDetailsRepository = tutorDetailsRepository;
+//        this.userRepository = userRepository;
+//        this.subjectRepository = subjectRepository;
+//    }
+
+    public TutorDetailsService(TutorDetailsRepository tutorDetailsRepository, UserRepository userRepository, SubjectRepository subjectRepository)
     {
         this.tutorDetailsRepository = tutorDetailsRepository;
         this.userRepository = userRepository;
+        this.subjectRepository = subjectRepository;
     }
 
     public TutorDetails CreateTutorDetails(TutorDetailsDTO tutor, String username)
@@ -32,10 +47,28 @@ public class TutorDetailsService {
         newTutor.setEfficency(tutor.getEfficency());
         newTutor.setLiteracy(tutor.getLiteracy());
         newTutor.setUsername(username);
-        newTutor.setIdSubject(tutor.getId_Subject());
+
+        newTutor.setSubject(new HashSet<>());
+        tutor.getSubject().stream().forEach(idSubject ->{
+            Subject subject = subjectRepository.findOneById((Long.parseLong(idSubject)));
+            if(subject == null){
+                subject = new Subject();
+                subject.setTutorDetails(new HashSet<>());
+                try {
+                    throw  new SubjectNotFoundException("Not found Subject with name: "+idSubject);
+                } catch (SubjectNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            newTutor.addSubject(subject);
+        });
 
         tutorDetailsRepository.save(newTutor);
-
+//        TutorDetailsDTO tutorDTO = new TutorDetailsDTO();
+//        tutorDTO.setEfficency(newTutor.getEfficency());
+//        tutorDTO.setLiteracy(newTutor.getLiteracy());
+//        tutorDTO.setSubject(newTutor.getSubject().stream().map(Subject::getNameSubject).collect(Collectors.toSet()));
 
         return newTutor;
     }
@@ -46,7 +79,6 @@ public class TutorDetailsService {
         System.out.println(Tutor);
         Tutor.setEfficency(tutor.getEfficency());
         Tutor.setLiteracy(tutor.getLiteracy());
-        Tutor.setIdSubject(tutor.getId_Subject());
         tutorDetailsRepository.save(Tutor);
 
         return Tutor;
@@ -56,12 +88,35 @@ public class TutorDetailsService {
         tutorDetailsRepository.deleteByUsername(username);
     }
 
-    public TutorDetails GetTutorDetails(String username)throws TutorNotFoundException{
+
+    public List<TutorDetailsDTO> getAllTutorDetails(){
+        List<TutorDetailsDTO> data = new ArrayList<>();
+        List<TutorDetails> tutors = tutorDetailsRepository.findAll();
+        for (TutorDetails tutorDetail : tutors) {
+            TutorDetailsDTO tutor = new TutorDetailsDTO();
+            tutor.setId(tutorDetail.getId());
+            tutor.setUsername(tutorDetail.getUsername());
+            tutor.setLiteracy(tutorDetail.getLiteracy());
+            tutor.setEfficency(tutorDetail.getEfficency());
+            tutor.setSubject(tutorDetail.getSubject().stream().map(Subject::getNameSubject).collect(Collectors.toSet()));
+            data.add(tutor);
+
+        }
+        return data;
+    }
+
+    public TutorDetailsDTO getTutorDetails(String username)throws TutorNotFoundException{
+        TutorDetailsDTO data = new TutorDetailsDTO();
         TutorDetails tutor = tutorDetailsRepository.findOneByUsername(username);
         if(tutor ==null)
         {
             throw new TutorNotFoundException();
         }
-        return  tutor;
+        data.setId(tutor.getId());
+        data.setUsername(tutor.getUsername());
+        data.setLiteracy(tutor.getLiteracy());
+        data.setEfficency(tutor.getEfficency());
+        data.setSubject(tutor.getSubject().stream().map(Subject::getNameSubject).collect(Collectors.toSet()));
+        return  data;
     }
 }

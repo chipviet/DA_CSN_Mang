@@ -2,20 +2,45 @@ package com.doan.cnpm.service.dto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
+import java.util.Set;
+
 
 public class TutorDetailsDTO {
     @NotNull
     @NotBlank
-    private String literacy;
+    private Long id;
+
     @NotNull
     @NotBlank
     private Long efficency;
 
     @NotNull
     @NotBlank
-    private Long id_Subject;
+    private String literacy;
+
     @NotBlank
     private String username;
+
+    @NotNull
+    @NotBlank
+    private Set<String> subject = new HashSet<>();
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Set<String> getSubject() {
+        return subject;
+    }
+
+    public void setSubject(Set<String> subject) {
+        this.subject = subject;
+    }
 
     public String getLiteracy() {
         return literacy;
@@ -39,13 +64,6 @@ public class TutorDetailsDTO {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-    public Long getId_Subject() {
-        return id_Subject;
-    }
-
-    public void setId_Subject(Long id_Subject) {
-        this.id_Subject = id_Subject;
     }
 
 }

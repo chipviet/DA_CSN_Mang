@@ -41,7 +41,7 @@ public class TutorDetailsController {
 
     private final UserAuthorityService userAuthorityService;
 
-    private TutorDetailsService tutorDetailsService;
+    private  TutorDetailsService tutorDetailsService;
 
     public TutorDetailsController (TutorDetailsRepository tutorDetailsRepository, UserRepository userRepository,TutorDetailsService tutorDetailsService, UserAuthorityService userAuthorityService) {
         this.tutorDetailsRepository = tutorDetailsRepository;
@@ -51,13 +51,13 @@ public class TutorDetailsController {
     };
 
     @GetMapping("v1/tutor")
-    public List<TutorDetails> getAllTutorDetails(HttpServletRequest request) {
+    public List<TutorDetailsDTO> getAllTutorDetails(HttpServletRequest request) {
         String username = request.getHeader("username");
         Optional<User> user = userRepository.findOneByUsername(username);
         String userId = String.valueOf(user.get().getId());
         String authority = userAuthorityService.getAuthority(userId);
-        if(authority.equals("ROLE_TUTOR") ){
-            return tutorDetailsRepository.findAll();
+        if(authority.equals("ROLE_TUTOR")||authority.equals("ROLE_ADMIN") ){
+            return tutorDetailsService.getAllTutorDetails();
         }
         throw new AccessDeniedException();
 
@@ -65,11 +65,11 @@ public class TutorDetailsController {
 
 
     @GetMapping("v1/tutor/details")
-    public ResponseEntity<TutorDetails> getTutorDetails (HttpServletRequest request) throws TutorNotFoundException {
+    public ResponseEntity<TutorDetailsDTO> getTutorDetails (HttpServletRequest request) throws TutorNotFoundException {
 
         String username = request.getHeader("username");
 
-        TutorDetails data = tutorDetailsRepository.findOneByUsername(username);
+        TutorDetailsDTO data = tutorDetailsService.getTutorDetails(username);
 
         return new ResponseEntity<>(data,HttpStatus.OK);
     }
@@ -82,8 +82,9 @@ public class TutorDetailsController {
         Optional<User> user = userRepository.findOneByUsername(username);
         String userId = String.valueOf(user.get().getId());
         String authority = userAuthorityService.getAuthority(userId);
-        if(authority.equals("ROLE_TUTOR") ){
+        if(authority.equals("ROLE_TUTOR")||authority.equals("ROLE_ADMIN" )){
             tutorDetailsService.CreateTutorDetails(tutor, username);
+            return;
         }
         throw new AccessDeniedException();
     }
@@ -93,14 +94,12 @@ public class TutorDetailsController {
     public void updateTutorDetails (@RequestBody TutorDetailsDTO tutor, HttpServletRequest request)  {
         String username = request.getHeader("username");
         Optional<User> user = userRepository.findOneByUsername(username);
-        User userr = user.get();
-        if((userr.getAuthorities().iterator().next().getName()).equals("TUTOR"))
-        {
-
+        String userId = String.valueOf(user.get().getId());
+        String authority = userAuthorityService.getAuthority(userId);
+        if(authority.equals("ROLE_TUTOR")||authority.equals("ROLE_ADMIN" )){
+            tutorDetailsService.UpdateTutorDetails(tutor, username);
         }
-
-        System.out.println(username);
-        tutorDetailsService.UpdateTutorDetails(tutor, username);
+        throw new AccessDeniedException();
     }
 
     @DeleteMapping("v1/tutor/delete")
