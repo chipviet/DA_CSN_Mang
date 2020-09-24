@@ -37,6 +37,8 @@ public interface TutorDetailsRepository extends JpaRepository<TutorDetails, Long
     @Query("DELETE from TutorDetails t where t.username = :username ")
     void deleteByUsername(@Param("username") String username);
 
+
+
 //    Optional<TutorDetails> findOneByUsername (String username);
 
 
