@@ -1,5 +1,7 @@
 package com.doan.cnpm.service.dto;
 
+import com.doan.cnpm.domain.enumeration.UserStatus;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -67,6 +69,10 @@ public class RegisterUserDTO implements Serializable {
     @NotNull
     @NotBlank
     private String authority;
+
+    @NotNull
+    @NotBlank
+    private UserStatus status;
 
     public String getUsername() {
         return username;
@@ -178,5 +184,13 @@ public class RegisterUserDTO implements Serializable {
 
     public void setAuthority(String authority) {
         this.authority = authority;
+    }
+
+    public UserStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(UserStatus status) {
+        this.status = status;
     }
 }

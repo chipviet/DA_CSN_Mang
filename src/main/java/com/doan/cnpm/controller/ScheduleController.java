@@ -21,6 +21,7 @@ import java.util.Optional;
 
 import static java.lang.Integer.parseInt;
 
+@CrossOrigin(origins = "http://haimai.ddns.net:9090", maxAge = 3600)
 @RestController
 @RequestMapping("/api/edu")
 @Transactional

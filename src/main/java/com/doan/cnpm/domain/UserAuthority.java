@@ -27,6 +27,7 @@ public class UserAuthority implements Serializable {
     @Column(name = "authority_name")
     private String authorityName;
 
+
     public String getUserId() {
         return userId;
     }

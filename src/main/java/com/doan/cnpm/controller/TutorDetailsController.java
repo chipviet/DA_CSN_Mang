@@ -28,6 +28,7 @@ import java.util.Set;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+@CrossOrigin(origins = "http://haimai.ddns.net:9090", maxAge = 3600)
 @RestController
 @RequestMapping("/api/edu")
 @Transactional

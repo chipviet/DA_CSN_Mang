@@ -83,5 +83,39 @@ public class UserService {
         List<User> listUser = userRepository.findAll();
         return listUser;
     }
+
+    public User updateUser(RegisterUserDTO userDTO,Optional<User> user){
+        user.get().setFirstName(userDTO.getFirstName());
+        user.get().setLastName(userDTO.getLastName());
+        user.get().setAddress(userDTO.getAddress());
+        user.get().setDateOfBirth(userDTO.getDateOfBirth());
+        user.get().setIntroduction(userDTO.getIntroduction());
+        user.get().setEmail(userDTO.getEmail());
+        user.get().setPhoneNumber(userDTO.getPhoneNumber());
+        user.get().setGender(userDTO.getGender());
+        user.get().setLatitude(userDTO.getLatitude());
+        user.get().setLongitude(userDTO.getLongitude());
+        user.get().setPhoto(userDTO.getPhoto());
+        user.get().setStatus(userDTO.getStatus());
+
+        userRepository.save(user.get());
+        return user.get();
+    }
+
+    public String changeUserStatus(Optional<User> user,String status){
+        if(UserStatus.valueOf(status)!=null)
+            user.get().setStatus(UserStatus.valueOf(status));
+        userRepository.save(user.get());
+        return "change " + user.get().getUsername() + " status : " +status;
+    }
+
+    public String deleteUser(Optional<User> user){
+        if(user!= null){
+            user.get().removeAuthorities();
+            userRepository.deleteById(user.get().getId());
+            return "Delete success User with username "+ user.get().getUsername() +" !";
+        }
+        return "Delete fail !";
+    }
 }
 

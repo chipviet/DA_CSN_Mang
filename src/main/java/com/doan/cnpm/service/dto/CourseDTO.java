@@ -2,10 +2,21 @@ package com.doan.cnpm.service.dto;
 
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.util.HashSet;
+import java.util.Set;
+
 @Service
 public class CourseDTO {
 
     private Long id;
+
+    private Long idNeed;
+
+    private Long idTutor;
+
+    private Set<String> student = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -31,8 +42,11 @@ public class CourseDTO {
         this.idTutor = idTutor;
     }
 
-    private Long idNeed;
+    public Set<String> getStudent() {
+        return student;
+    }
 
-    private Long idTutor;
-
+    public void setStudent(Set<String> student) {
+        this.student = student;
+    }
 }

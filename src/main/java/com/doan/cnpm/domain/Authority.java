@@ -1,14 +1,13 @@
 package com.doan.cnpm.domain;
 
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Column;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * An authority (a security role) used by Spring Security.
@@ -34,6 +33,9 @@ public class Authority implements Serializable {
         this.name = name;
     }
 
+    @ManyToMany(mappedBy = "authorities")
+    private Set<User> users = new HashSet<>();
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -43,6 +45,14 @@ public class Authority implements Serializable {
             return false;
         }
         return Objects.equals(name, ((Authority) o).name);
+    }
+
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
 
     @Override

@@ -1,4 +1,4 @@
-    package com.doan.cnpm.controller;
+package com.doan.cnpm.controller;
 
 import com.doan.cnpm.domain.Subject;
 import com.doan.cnpm.domain.User;
@@ -20,7 +20,7 @@ import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
-
+@CrossOrigin(origins = "http://haimai.ddns.net:9090", maxAge = 3600)
 @RestController
 @RequestMapping("/api/edu")
 @Transactional

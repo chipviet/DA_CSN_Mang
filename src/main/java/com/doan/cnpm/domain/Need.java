@@ -37,6 +37,9 @@ public class Need {
     @Column(name = "type")
     private String type;
 
+    @Column(name = "tuition")
+    private Long tuition;
+
     public Long getId() {
         return id;
     }
@@ -98,5 +101,13 @@ public class Need {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public Long getTuition() {
+        return tuition;
+    }
+
+    public void setTuition(Long tuition) {
+        this.tuition = tuition;
     }
 }

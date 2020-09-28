@@ -9,6 +9,7 @@ import com.doan.cnpm.service.dto.CourseDTO;
 import com.doan.cnpm.service.exception.AccessDeniedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +21,7 @@ import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
-
+@CrossOrigin(origins = "http://haimai.ddns.net:9090", maxAge = 3600)
 @RestController
 @RequestMapping("/api/edu")
 @Transactional
@@ -40,43 +41,36 @@ public class CourseController {
     }
 
     @GetMapping(value="/v1/course")
-    public List<Course> getALlCourses(HttpServletRequest request){
+    public List<CourseDTO> getALlCourses(HttpServletRequest request){
         String username = request.getHeader("username");
         Optional<User> user = userRepository.findOneByUsername(username);
         String userId = String.valueOf(user.get().getId());
         String authority = userAuthorityService.getAuthority(userId);
-        if(authority.equals("ROLE_ADMIN")) {
-            return courseRepository.findAll();
+        if(authority.equals("ROLE_ADMIN")||authority.equals("ROLE_STUDENT")||authority.equals("ROLE_TUTOR")) {
+            return courseService.getAllCourse();
         }
         throw new AccessDeniedException();
     }
 
     @GetMapping("v1/course/details")
-    public ResponseEntity<Course> getCourseDetails (@RequestParam(name = "id") Long id, HttpServletRequest request) {
+    public CourseDTO getCourseDetails (@RequestParam(name = "id") Long idCourse, HttpServletRequest request) {
 
         String username = request.getHeader("username");
         Optional<User> user = userRepository.findOneByUsername(username);
         String userId = String.valueOf(user.get().getId());
         String authority = userAuthorityService.getAuthority(userId);
         if(authority.equals("ROLE_ADMIN")) {
-            Course data = courseRepository.findOneById(id);
-            return new ResponseEntity<>(data, HttpStatus.OK);
+            return courseService.getCourseDetails(idCourse);
         }
         throw new AccessDeniedException();
     }
 
     @PostMapping("v1/course/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createCourse (@RequestBody CourseDTO course, HttpServletRequest request){
+    public void createCourse (@RequestParam(name = "idNeed") Long idNeed, HttpServletRequest request){
         String username = request.getHeader("username");
         Optional<User> user = userRepository.findOneByUsername(username);
-        String userId = String.valueOf(user.get().getId());
-        String authority = userAuthorityService.getAuthority(userId);
-        if(authority.equals("ROLE_ADMIN")) {
-            courseService.CreateCourse(course);
-            return;
-        }
-        throw new AccessDeniedException();
+        courseService.CreateCourse(idNeed,user.get().getId());
     }
 
     @PutMapping("v1/course/update")
@@ -93,6 +87,35 @@ public class CourseController {
         throw new AccessDeniedException();
     }
 
+    @PutMapping("v1/course/join")
+    @ResponseStatus(HttpStatus.UPGRADE_REQUIRED)
+    public void joinCourse(HttpServletRequest request, @RequestParam(name = "idCourse")Long idCourse){
+        String username = request.getHeader("username");
+        Optional<User> user = userRepository.findOneByUsername(username);
+        String userId = String.valueOf(user.get().getId());
+        String authority = userAuthorityService.getAuthority(userId);
+        if(authority.equals("ROLE_STUDENT")) {
+            courseService.JoinCourse(idCourse, user.get().getId());
+            return;
+        }
+        throw new AccessDeniedException();
+    }
+
+    @PutMapping("v1/course/out")
+    @ResponseStatus(HttpStatus.UPGRADE_REQUIRED)
+    public void outCourse(HttpServletRequest request, @RequestParam(name = "idCourse")Long idCourse){
+        String username = request.getHeader("username");
+        Optional<User> user = userRepository.findOneByUsername(username);
+        String userId = String.valueOf(user.get().getId());
+        String authority = userAuthorityService.getAuthority(userId);
+        if(authority.equals("ROLE_STUDENT")) {
+            courseService.OutCourse(idCourse, user.get().getId());
+            return;
+        }
+        throw new AccessDeniedException();
+    }
+
+
     @DeleteMapping("v1/course/delete/{id}")
     public void deleteCourse(HttpServletRequest request,@RequestParam(name = "id") Long id)
     {
@@ -100,10 +123,11 @@ public class CourseController {
         Optional<User> user = userRepository.findOneByUsername(username);
         String userId = String.valueOf(user.get().getId());
         String authority = userAuthorityService.getAuthority(userId);
-        if(authority.equals("ROLE_ADMIN")) {
+        if(authority.equals("ROLE_TUTOR")) {
             courseService.DeleteCourse(id);
             return;
         }
         throw new AccessDeniedException();
     }
+
 }

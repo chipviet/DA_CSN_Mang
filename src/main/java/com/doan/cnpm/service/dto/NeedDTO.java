@@ -19,6 +19,8 @@ public class NeedDTO {
 
     private Boolean status;
 
+    private Long tuition;
+
     public Long getId() {
         return id;
     }
@@ -75,4 +77,11 @@ public class NeedDTO {
         this.status = status;
     }
 
+    public Long getTuition() {
+        return tuition;
+    }
+
+    public void setTuition(Long tuition) {
+        this.tuition = tuition;
+    }
 }

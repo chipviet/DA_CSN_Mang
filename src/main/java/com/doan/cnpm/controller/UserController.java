@@ -91,4 +91,46 @@ public class UserController {
         throw new AccessDeniedException();
     }
 
+    @PutMapping("v1/user/update")
+    @ResponseStatus(HttpStatus.UPGRADE_REQUIRED)
+    public User updateUser(@RequestParam(name = "idUser")Long idUser, @RequestBody RegisterUserDTO userDTO,HttpServletRequest request ){
+        String username = request.getHeader("username");
+        Optional<User> user = userRepository.findOneByUsername(username);
+        String userId = String.valueOf(user.get().getId());
+        String authority = userAuthorityService.getAuthority(userId);
+        if(authority.equals("ROLE_ADMIN")) {
+            Optional<User> user1 = userRepository.findById(idUser);
+            return userService.updateUser(userDTO,user1);
+        }
+
+        return userService.updateUser(userDTO,user);
+    }
+
+    @DeleteMapping("v1/user/delete/{id}")
+    public String deleteUser(@RequestParam(name = "idUser")Long idUser,HttpServletRequest request){
+        String username = request.getHeader("username");
+        Optional<User> user = userRepository.findOneByUsername(username);
+        String userId = String.valueOf(user.get().getId());
+        String authority = userAuthorityService.getAuthority(userId);
+        if(authority.equals("ROLE_ADMIN")) {
+            Optional<User> user1 = userRepository.findById(idUser);
+            return userService.deleteUser(user1);
+        }
+
+        return userService.deleteUser(user);
+    }
+
+    @PutMapping("v1/user/changeStatus")
+    @ResponseStatus(HttpStatus.UPGRADE_REQUIRED)
+    public String updateUser(@RequestParam(name = "id")Long idUser,@RequestParam(name ="status") String status, HttpServletRequest request){
+        String username = request.getHeader("username");
+        Optional<User> user = userRepository.findOneByUsername(username);
+        String userId = String.valueOf(user.get().getId());
+        String authority = userAuthorityService.getAuthority(userId);
+        if(authority.equals("ROLE_ADMIN")) {
+            Optional<User> user1 = userRepository.findById(idUser);
+            return userService.changeUserStatus(user1,status);
+        }
+        throw new AccessDeniedException();
+    }
 }

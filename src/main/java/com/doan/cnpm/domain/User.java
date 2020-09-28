@@ -83,6 +83,9 @@ public class User  implements Serializable {
         return id;
     }
 
+    @ManyToMany(mappedBy = "student", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    private Set<Course> courses = new HashSet<>();
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -215,4 +218,23 @@ public class User  implements Serializable {
         this.authorities = authorities;
     }
 
+    public Set<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(Set<Course> courses) {
+        this.courses = courses;
+    }
+
+    public void removeAuthorities(Authority authority){
+        this.getAuthorities().remove(authority);
+        authority.getUsers().remove(this);
+
+    }
+
+    public void removeAuthorities(){
+        for(Authority authority:new HashSet<>(authorities)){
+            removeAuthorities(authority);
+        }
+    }
 }

@@ -21,7 +21,7 @@ import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
-
+@CrossOrigin(origins = "http://haimai.ddns.net:9090", maxAge = 3600)
 @RestController
 @RequestMapping("/api/edu")
 @Transactional

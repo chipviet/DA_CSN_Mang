@@ -21,6 +21,7 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     @Query("SELECT n from Course n where n.idTutor = :idTutor ")
     Course findOneByidTutor(@Param("idTutor") Long idTutor);
 
+
     @Transactional
     @Modifying
     @Query("DELETE from Course n where n.id = :id ")
