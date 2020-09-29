@@ -1,7 +1,6 @@
 package com.doan.cnpm.repositories;
 
 
-import com.doan.cnpm.domain.TutorDetails;
 import com.doan.cnpm.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
